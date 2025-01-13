@@ -1,8 +1,17 @@
+import checkValidData from "../utils/validate";
 import Header from "./Header";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage]=useState(null)
+  const email = useRef(null);
+  const password = useRef(null);
+
+  const handleButtonClick = () => {
+    const message=checkValidData(email.current.value,password.current.value);
+    setErrorMessage(message)
+  };
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -16,26 +25,37 @@ const Login = () => {
           alt="background"
         />
       </div>
-      <form className="absolute w-3/12 p-12 bg-black my-36 mx-auto right-0 left-0 z-10 bg-opacity-80 text-white ">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="absolute w-3/12 p-12 bg-black my-36 mx-auto right-0 left-0 z-10 bg-opacity-80 text-white "
+      >
         <h1 className="font-extrabold font text-3xl py-3 ">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
-       { !isSignInForm &&<input
-          type="text"
-          placeholder="Enter your name"
-          className="p-4 my-4 w-full bg-gray-600 rounded-lg"
-        />}
+        {!isSignInForm && (
+          <input
+            type="text"
+            placeholder="Enter your name"
+            className="p-4 my-3 w-full bg-gray-600 rounded-lg"
+          />
+        )}
         <input
+          ref={email}
           type="text"
           placeholder="Email or mobile number"
-          className="p-4 my-4 w-full bg-gray-600 rounded-lg"
+          className="p-4 my-3 w-full bg-gray-600 rounded-lg"
         />
         <input
           type="password"
+          ref={password}
           placeholder="Password"
-          className="p-4 my-4 w-full bg-gray-600 rounded-lg"
+          className="p-4 my-3 w-full bg-gray-600 rounded-lg"
         />
-        <button className="text-center p-4 my-6 bg-red-800 opacity-100 w-full rounded-lg">
+        <p className="text-red-700 font-bold text-center">{errorMessage}</p>
+        <button
+          className="text-center p-4 my-6 bg-red-800 opacity-100 w-full rounded-lg"
+          onClick={handleButtonClick}
+        >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer " onClick={toggleSignInForm}>
